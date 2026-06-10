@@ -5,11 +5,11 @@ import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2 } from "lucide-react";
+import { Loader2, LogOut } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { user, profile, loading, signIn, signUp } = useAuth();
+  const { user, profile, loading, signIn, signUp, logout } = useAuth();
   const [mode, setMode] = useState<"login" | "register">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,8 +19,8 @@ export default function LoginPage() {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    if (!loading && user) {
-      router.replace(profile?.role === "instructor" ? "/instructor" : "/join");
+    if (!loading && user && profile?.role === "instructor") {
+      router.replace("/instructor");
     }
   }, [user, profile, loading, router]);
 
@@ -41,6 +41,33 @@ export default function LoginPage() {
       setSubmitting(false);
     }
   };
+
+  if (!loading && user && profile?.role === "student") {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="w-full max-w-md">
+          <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+            <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-600 rounded-xl mb-4">
+              <span className="text-white font-bold text-lg">V</span>
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-1">VJCC Roleplay</h1>
+            <p className="text-sm text-gray-500 mb-6">Đang đăng nhập với <span className="font-medium text-gray-700">{user.email}</span></p>
+            <Button className="w-full mb-3" onClick={() => router.push("/join")}>
+              Tham gia session
+            </Button>
+            <button
+              type="button"
+              onClick={async () => { await logout(); }}
+              className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+              Đăng xuất tài khoản này
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">

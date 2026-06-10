@@ -9,11 +9,13 @@ import { ChatWindow } from "@/components/chat/ChatWindow";
 import { ChatInput } from "@/components/chat/ChatInput";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, Loader2 } from "lucide-react";
+import { ChevronRight, Loader2, LogOut } from "lucide-react";
+import { useAuth } from "@/lib/auth-context";
 
 export default function StudentSessionPage() {
   const { code } = useParams<{ code: string }>();
   const router = useRouter();
+  const { logout } = useAuth();
   const [session, setSession] = useState<Session | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [streaming, setStreaming] = useState(false);
@@ -24,11 +26,11 @@ export default function StudentSessionPage() {
 
   useEffect(() => {
     const upper = code.toUpperCase().replace("-", "");
+    localStorage.setItem("lastSessionCode", upper);
     getSessionByCode(upper).then((s) => {
       setSession(s);
       if (s) {
         sessionIdRef.current = s.id;
-        // For practice sessions, create a new run
         if (s.sessionType === "practice") {
           fetch(`/api/sessions/${s.id}/runs`, { method: "POST" })
             .then((r) => r.json())
@@ -133,6 +135,14 @@ export default function StudentSessionPage() {
               Kết thúc & Xem debrief
             </Button>
           )}
+          <button
+            type="button"
+            onClick={async () => { await logout(); router.push("/login"); }}
+            className="p-1.5 text-gray-400 hover:text-gray-600 transition-colors"
+            title="Đăng xuất"
+          >
+            <LogOut className="h-4 w-4" />
+          </button>
         </div>
       </div>
 
