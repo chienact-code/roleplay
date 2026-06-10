@@ -24,12 +24,14 @@ export function ResponseBuilder({
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleAnalyze = async () => {
     if (!studentInput.trim()) return;
     setLoading(true);
     setSuggestions([]);
     setSelected(new Set());
+    setError("");
     try {
       const res = await fetch(`/api/sessions/${sessionId}/suggest`, {
         method: "POST",
@@ -37,7 +39,16 @@ export function ResponseBuilder({
         body: JSON.stringify({ studentInput }),
       });
       const data = await res.json();
-      setSuggestions(data.suggestions ?? []);
+      if (!res.ok) {
+        setError(data.error ?? `Lỗi ${res.status}`);
+        return;
+      }
+      const suggestions = data.suggestions ?? [];
+      if (suggestions.length === 0) setError("AI không trả về gợi ý. Thử lại.");
+      setSuggestions(suggestions);
+    } catch (e) {
+      setError("Không kết nối được API.");
+      console.error(e);
     } finally {
       setLoading(false);
     }
@@ -86,6 +97,7 @@ export function ResponseBuilder({
           {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
           Phân tích
         </Button>
+        {error && <p className="text-xs text-red-500">{error}</p>}
       </div>
 
       {suggestions.length > 0 && (

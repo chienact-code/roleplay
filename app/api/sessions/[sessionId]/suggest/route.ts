@@ -35,10 +35,16 @@ export async function POST(
     });
 
     const text = response.content[0].type === "text" ? response.content[0].text : "";
+    // Accept lines starting with [ or numbered (1. [...)
     const suggestions = text
       .split("\n")
       .map((s) => s.trim())
-      .filter((s) => s.startsWith("[") && s.length > 5);
+      .filter((s) => s.length > 5)
+      .map((s) => s.replace(/^\d+\.\s*/, "")) // strip leading "1. "
+      .filter((s) => s.startsWith("["));
+
+    console.log("suggest raw:", JSON.stringify(text.slice(0, 300)));
+    console.log("suggest parsed:", suggestions);
 
     return NextResponse.json({ suggestions });
   } catch (error) {
