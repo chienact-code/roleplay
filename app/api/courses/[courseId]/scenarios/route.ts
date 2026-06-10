@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getScenarios, createScenario } from "@/lib/firestore";
+import { getScenarios, createScenario } from "@/lib/firestore-server";
 
 export const dynamic = "force-dynamic";
 

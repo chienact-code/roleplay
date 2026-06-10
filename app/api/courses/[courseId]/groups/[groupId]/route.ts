@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getGroup, updateGroup } from "@/lib/firestore";
+import { getGroup, updateGroup } from "@/lib/firestore-server";
 
 export const dynamic = "force-dynamic";
 

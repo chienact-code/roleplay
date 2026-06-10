@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSessionByCode } from "@/lib/firestore";
+import { getSessionByCode } from "@/lib/firestore-server";
 
 export const dynamic = "force-dynamic";
 

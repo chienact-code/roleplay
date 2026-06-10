@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
-import { getSession, getMessages, addMessage, updateSession } from "@/lib/firestore";
+import { getSession, getMessages, addMessage, updateSession } from "@/lib/firestore-server";
 import { buildAutonomousSystemPrompt } from "@/lib/claude";
 
 export const dynamic = "force-dynamic";

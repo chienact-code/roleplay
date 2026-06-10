@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSession, addMessage, addRefinement } from "@/lib/firestore";
+import { getSession, addMessage, addRefinement } from "@/lib/firestore-server";
 import { serverTimestamp, Timestamp } from "firebase/firestore";
 
 export const dynamic = "force-dynamic";

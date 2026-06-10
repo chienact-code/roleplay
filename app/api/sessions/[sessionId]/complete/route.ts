@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { updateSession } from "@/lib/firestore";
-import { serverTimestamp, Timestamp } from "firebase/firestore";
+import { updateSession } from "@/lib/firestore-server";
 
 export const dynamic = "force-dynamic";
 
@@ -14,8 +13,8 @@ export async function POST(
 
     await updateSession(sessionId, {
       status: "completed",
-      completedAt: serverTimestamp() as unknown as Timestamp,
-    });
+      completedAt,
+    } as unknown as Parameters<typeof updateSession>[1]);
 
     return NextResponse.json({ completedAt });
   } catch (error) {
